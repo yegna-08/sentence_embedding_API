@@ -1,0 +1,90 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Docker CI
+
+# Controls when the workflow will run
+on:
+  # Trigger when a new release is published
+  release:
+    types: [published]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          # Name is the resulting name of the image. DOCKER_USERNAME/<name> is how it is stored in the Docker Hub
+          # Path is the path to the Dockerfile under the src/ directory
+          - name: sentence_embedding_api
+            path: sentence_embedding_API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # First, the Docker images need to be built but can't be pushed because they need to be
+      # used by Trivy locally
+      - name: Build Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: src/${{ matrix.path }}
+          # Load into Docker to be accessible by Trivy
+          load: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.name }}:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.name }}:${{ github.ref_name }}
+          # Change this to 1 for the workflow to fail when vulnerabilities specified in .severity are found
+          exit-code: 0
+          severity: CRITICAL,HIGH
+
+      # The Docker images should not be rebuilt, only pushed, because they will be cached
+      - name: Push Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: src/${{ matrix.path }}
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ matrix.name }}:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # docker-tag-update:
+  #   runs-on: ubuntu-latest
+  #   #Run this after all images are built
+  #   needs: build-images
+  #   if: ${{ always() && !cancelled() && needs.build-images.result == 'success'}}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Checkout the same repo
+  #       uses: actions/checkout@master
+  #       with:
+  #         repository: yegna-08/sentence_embedding_API
+  #         token: ${{ secrets.SEMBED_TOKEN }}
+  #         # path: ./sentence_embedding_API
+  #     - name: Edit the version tag
+  #       run: |
+  #         sed -i 's/^version: .*/version: ${{ github.ref_name }}/g' ./deploy/helm_chart/sentence_embedding_API/Chart.yaml
+  #         sed -i 's/^appVersion: .*/appVersion: "${{ github.ref_name }}"/g' ./deploy/helm_chart/sentence_embedding_API/Chart.yaml
+
+  #     - name: Auto Commit the docker tag to the repo
+  #       uses: stefanzweifel/git-auto-commit-action@v4
+  #       with:
+  #         commit_message: CICD automated docker tag update to helm chart App version
+  #         repository: ./sentence_embedding_API
