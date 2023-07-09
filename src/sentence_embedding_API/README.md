@@ -41,8 +41,9 @@ the service by running `kubectl get svc sembed -n sembed` in the terminal.
 $ curl -X POST -H "Content-type: application/json" -d '{"sentence": "Life is beautiful"}' http://<svc-IP>:<svc-port>/get_embeddings
 ```
 ## Calling the API using Domain name
-- `www.sembed.com` is only for reference and it returns `{"status": "healthy"}`
--  `www.sembed.com/get_embeddings` will return a JSON containing the embeddings
+- `www.sembed.com` is only for reference
+- `www.sembed.com/health_check` returns `{"status": "healthy"}`
+- `www.sembed.com/get_embeddings` will return a JSON containing the embeddings
 
 ### How to test nginx ingress
 If you are using [minikube](https://minikube.sigs.k8s.io/docs/start/) to deploy kubernetes cluster

@@ -23,7 +23,7 @@ async def get_valid_json(request: Request) -> Optional[JSON]:
     except ValueError:
         return None
 
-@app.get('/')
+@app.get('/health_check')
 def kubernetes_health_check():
     return {"status": "healthy"}
 

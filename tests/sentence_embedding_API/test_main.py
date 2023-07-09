@@ -27,7 +27,7 @@ def fake_request() -> Request:
     return Request(scope = {"type": "http"})
 
 def test_kubernetes_health_check() -> None:
-    response = test_client.get("/")
+    response = test_client.get("/health_check")
 
     assert response.status_code == 200
     assert response.json().get("status") is not None
