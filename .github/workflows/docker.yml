@@ -74,7 +74,6 @@ jobs:
     needs: build-images
     if: ${{ always() && !cancelled() && needs.build-images.result == 'success'}}
     steps:
-      - uses: actions/checkout@v3
       - name: Checkout the same repo
         uses: actions/checkout@master
         with:
