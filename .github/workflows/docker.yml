@@ -83,8 +83,8 @@ jobs:
           # path: ./sentence_embedding_API
       - name: Edit the version tag
         run: |
-          sed -i 's/^version: .*/version: ${{ github.ref_name }}/g' ./deploy/sentence_embedding_API/Chart.yaml
-          sed -i 's/^appVersion: .*/appVersion: "${{ github.ref_name }}"/g' ./deploy/sentence_embedding_API/Chart.yaml
+          sed -i 's/^version: .*/version: ${{ github.ref_name }}/g' ./deploy/sembed/Chart.yaml
+          sed -i 's/^appVersion: .*/appVersion: "${{ github.ref_name }}"/g' ./deploy/sembed/Chart.yaml
 
       - name: Auto Commit the docker tag to the repo
         uses: stefanzweifel/git-auto-commit-action@v4
