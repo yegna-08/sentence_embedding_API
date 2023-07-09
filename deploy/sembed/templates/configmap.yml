@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Release.Name}}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-config
+    meta.helm.sh/release-name: "{{ .Release.Name }}"
+    meta.helm.sh/release-namespace: "{{ .Release.Namespace }}"
+  annotations:
+    meta.helm.sh/release-name: "{{ .Release.Name }}"
+    meta.helm.sh/release-namespace: "{{ .Release.Namespace }}"
+data:
+  config.cfg: |
+    [main]
+    LOGGER_FILE_PATH = logger.json
+    FASTAPI_HOST = 0.0.0.0
+    FASTAPI_PORT = 5000
+    RETURN_ARRAY_SIZE = 500
+    ARRAY_LOWER_BOUND = 0
+    ARRAY_UPPER_BOUND = 10

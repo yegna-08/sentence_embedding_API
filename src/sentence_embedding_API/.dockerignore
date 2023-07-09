@@ -1,0 +1,9 @@
+.venv
+Pipfile
+Pipfile.lock
+requirements_raw.txt
+*.md
+*.pyc
+/config/*
+Dockerfile
+.dockerignore

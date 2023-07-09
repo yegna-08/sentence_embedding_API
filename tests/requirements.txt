@@ -1,0 +1,9 @@
+pytest
+pytest-asyncio
+pytest-cov
+pytest-mock
+requests_mock
+httpx
+anyio
+pytest-tornasync
+pytest-trio
