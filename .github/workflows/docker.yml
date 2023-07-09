@@ -78,9 +78,9 @@ jobs:
       - name: Checkout the same repo
         uses: actions/checkout@master
         with:
-          repository: yegna-08
+          repository: yegna-08/sentence_embedding_API
           token: ${{ secrets.SEMBED_TOKEN }}
-          path: ./sentence_embedding_API
+          # path: ./sentence_embedding_API
       - name: Edit the version tag
         run: |
           sed -i 's/^version: .*/version: ${{ github.ref_name }}/g' ./deploy/sembed/Chart.yaml
@@ -90,4 +90,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: CICD automated docker tag update to helm chart App version
-          repository: ./sentence_embedding_API
+          repository: .
