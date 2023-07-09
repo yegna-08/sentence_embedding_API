@@ -78,9 +78,9 @@ jobs:
       - name: Checkout the same repo
         uses: actions/checkout@master
         with:
-          repository: yegna-08/sentence_embedding_API
+          repository: yegna-08
           token: ${{ secrets.SEMBED_TOKEN }}
-          # path: ./sentence_embedding_API
+          path: ./sentence_embedding_API
       - name: Edit the version tag
         run: |
           sed -i 's/^version: .*/version: ${{ github.ref_name }}/g' ./deploy/sembed/Chart.yaml
