@@ -29,6 +29,7 @@ def kubernetes_health_check():
 
 def generate_random_array(array_size: int, lower_bound: int, upper_bound: int) -> List[float]:
     """Generate random numbers using the array size and return them as list"""
+    logger.info("Generating random array of size {} between {} and {}".format(array_size, lower_bound, upper_bound))
     random_array = np.random.uniform(low = lower_bound, high = upper_bound, size = array_size).tolist()
     return random_array
 
@@ -47,6 +48,8 @@ async def get_embeddings(request: Request) -> Union[str, JSON]:
         if req_data is None:
             return Response("Please use JSON content type\n", 400)
 
+        logger.info("Input request data {}".format(req_data))
+
         response_body = {
         "message": "JSON received!",
         "sender": "sentence_embedding_API",
@@ -55,8 +58,10 @@ async def get_embeddings(request: Request) -> Union[str, JSON]:
         sentence = req_data.get('sentence')
 
         if sentence is None:
+            logger.info({"sentence": sentence, "response": ("Please provide an input sentence to embed\n", 400) })
             return Response("Please provide an input sentence to embed\n", 400)
         elif not isinstance(sentence, str):
+            logger.info({"sentence": sentence, "response": ("Please use String data type for 'sentence' parameter\n", 400) })
             return Response("Please use String data type for 'sentence' parameter\n", 400)
 
         response_body.update({"embeddings": generate_random_array(RETURN_ARRAY_SIZE, ARRAY_LOWER_BOUND, ARRAY_UPPER_BOUND)})
