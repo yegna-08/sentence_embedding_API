@@ -40,4 +40,25 @@ the service by running `kubectl get svc sembed -n sembed` in the terminal.
 ```shell
 $ curl -X POST -H "Content-type: application/json" -d '{"sentence": "Life is beautiful"}' http://<svc-IP>:<svc-port>/get_embeddings
 ```
+## Calling the API using Domain name
+- `www.sembed.com` is only for reference and it returns `{"status": "healthy"}`
+-  `www.sembed.com/get_embeddings` will return a JSON containing the embeddings
 
+### How to test nginx ingress
+If you are using [minikube](https://minikube.sigs.k8s.io/docs/start/) to deploy kubernetes cluster
+
+Follow the below steps to test `www.sembed.com` from your local browser
+In your Mac/Linux machine
+```shell
+$ sudo vim /etc/hosts
+```
+Add the below line and save
+- `127.0.0.1  www.sembed.com`
+
+Open a new terminal, run the below command and keep the terminal open
+```shell
+$ minikube tunnel
+```
+Call `www.sembed.com` from your browser to get the health check JSON
+
+Pass `sentence` parameter in a JSON body in a POST request to get embeddings
