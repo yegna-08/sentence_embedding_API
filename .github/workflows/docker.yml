@@ -68,26 +68,26 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # docker-tag-update:
-  #   runs-on: ubuntu-latest
-  #   #Run this after all images are built
-  #   needs: build-images
-  #   if: ${{ always() && !cancelled() && needs.build-images.result == 'success'}}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Checkout the same repo
-  #       uses: actions/checkout@master
-  #       with:
-  #         repository: yegna-08/sentence_embedding_API
-  #         token: ${{ secrets.SEMBED_TOKEN }}
-  #         # path: ./sentence_embedding_API
-  #     - name: Edit the version tag
-  #       run: |
-  #         sed -i 's/^version: .*/version: ${{ github.ref_name }}/g' ./deploy/helm_chart/sentence_embedding_API/Chart.yaml
-  #         sed -i 's/^appVersion: .*/appVersion: "${{ github.ref_name }}"/g' ./deploy/helm_chart/sentence_embedding_API/Chart.yaml
+  docker-tag-update:
+    runs-on: ubuntu-latest
+    #Run this after all images are built
+    needs: build-images
+    if: ${{ always() && !cancelled() && needs.build-images.result == 'success'}}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Checkout the same repo
+        uses: actions/checkout@master
+        with:
+          repository: yegna-08/sentence_embedding_API
+          token: ${{ secrets.SEMBED_TOKEN }}
+          # path: ./sentence_embedding_API
+      - name: Edit the version tag
+        run: |
+          sed -i 's/^version: .*/version: ${{ github.ref_name }}/g' ./deploy/helm_chart/sentence_embedding_API/Chart.yaml
+          sed -i 's/^appVersion: .*/appVersion: "${{ github.ref_name }}"/g' ./deploy/helm_chart/sentence_embedding_API/Chart.yaml
 
-  #     - name: Auto Commit the docker tag to the repo
-  #       uses: stefanzweifel/git-auto-commit-action@v4
-  #       with:
-  #         commit_message: CICD automated docker tag update to helm chart App version
-  #         repository: ./sentence_embedding_API
+      - name: Auto Commit the docker tag to the repo
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: CICD automated docker tag update to helm chart App version
+          repository: ./sentence_embedding_API
