@@ -2,6 +2,7 @@
 API that gets a sentence in english as input and returns embeddings as array of floats
 
 ## Table of Contents
+- [Project Tree Structure](#project-tree-structure)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
   - [Nginx](#nginx)
@@ -12,47 +13,45 @@ API that gets a sentence in english as input and returns embeddings as array of 
 - [Quickstart](./src/sentence_embedding_API/README.md)
 - [Unit Testing](./tests/README.md)
 
-sentence_embedding_API
-├── .github
-│   ├── workflows
-│   │   ├── docker.yml # builds and pushes the docker image
-│   │   ├── release.ym  # creates a new release
-│   │   ├── tests.yml # runs unit testing
-├── src
-│   ├── sentence_embedding_API
-│   │   ├── config
-│   │   |   ├── config.cfg # for local testing, in the production we use kubernetes configmap
-│   │   └── .dockerignore
-│   │   └── Dockerfile
-│   │   └── logger.json
-│   │   └── main.py # Actual code that embeds the input sentence
-│   │   └── pipfile # For package dependency management
-│   │   └── pipfile.lock
-│   │   └── README.md  # Contains API documentation
-│   │   └── requirements_raw.txt # for pipenv usage
-│   │   └── requirements.txt
-├── deploy
-│   └── helm_chart
-│   │   ├── sentence_embedding_API
-│   │   │   └── templates
-│   │   │       ├── configmap.yml
-│   │   │       ├── deployment.yml
-│   │   │       ├── hpa.yml
-│   │   │       ├── ingress.yml
-│   │   │       ├── service.yml
-│   │   │       ├── serviceaccount.yml
-│   │   │   └── Chart.yaml
-│   │   │   └── values.yaml
-├── tests/
-│   ├── sentence_embedding_API
-│   │   └── test_main.py
-│   │   └── __init__.py
-│   ├── __init__.py
-│   ├── README.md # Contains Unit Testing documentation
-│   ├── requirements.txt # Contains Unit Testing dependencies
-├── .gitignore
-├── tox.ini # Automate Unit Testing build and run
-├── README.md
+## Project tree structure
+
+- __sentence\_embedding\_API__
+   - [LICENSE](LICENSE)
+   - [README.md](README.md)
+   - __deploy__
+     - __sembed__
+       - [Chart.yaml](deploy/sembed/Chart.yaml)
+       - __charts__
+       - __templates__
+         - [NOTES.txt](deploy/sembed/templates/NOTES.txt)
+         - [\_helpers.tpl](deploy/sembed/templates/_helpers.tpl)
+         - [configmap.yml](deploy/sembed/templates/configmap.yml)
+         - [deployment.yaml](deploy/sembed/templates/deployment.yaml)
+         - [hpa.yaml](deploy/sembed/templates/hpa.yaml)
+         - [ingress.yaml](deploy/sembed/templates/ingress.yaml)
+         - [service.yaml](deploy/sembed/templates/service.yaml)
+         - [serviceaccount.yaml](deploy/sembed/templates/serviceaccount.yaml)
+       - [values.yaml](deploy/sembed/values.yaml)
+   - __src__
+     - __sentence\_embedding\_API__
+       - [Dockerfile](src/sentence_embedding_API/Dockerfile)
+       - [Pipfile](src/sentence_embedding_API/Pipfile) # For package dependency management
+       - [Pipfile.lock](src/sentence_embedding_API/Pipfile.lock)
+       - [README.md](src/sentence_embedding_API/README.md) # Contains API documentation
+       - __config__
+         - [config.cfg](src/sentence_embedding_API/config/config.cfg) # for local testing, in the production we use kubernetes configmap
+       - [logger.json](src/sentence_embedding_API/logger.json)
+       - [main.py](src/sentence_embedding_API/main.py) # Actual code that embeds the input sentence
+       - [requirements.txt](src/sentence_embedding_API/requirements.txt)
+       - [requirements\_raw.txt](src/sentence_embedding_API/requirements_raw.txt) # for pipenv usage
+   - __tests__
+     - [README.md](tests/README.md) # Contains Unit Testing documentation
+     - [\_\_init\_\_.py](tests/__init__.py)
+     - [requirements.txt](tests/requirements.txt) # Contains Unit Testing dependencies
+     - __sentence\_embedding\_API__
+       - [\_\_init\_\_.py](tests/sentence_embedding_API/__init__.py)
+       - [test\_main.py](tests/sentence_embedding_API/test_main.py)
+   - [tox.ini](tox.ini) # Automate Unit Testing build and run
 
 
 ## Prerequisites
