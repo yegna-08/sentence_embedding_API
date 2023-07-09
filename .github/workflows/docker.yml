@@ -90,4 +90,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: CICD automated docker tag update to helm chart App version
+          branch: main
           repository: .
