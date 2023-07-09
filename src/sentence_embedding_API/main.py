@@ -23,6 +23,10 @@ async def get_valid_json(request: Request) -> Optional[JSON]:
     except ValueError:
         return None
 
+@app.get('/')
+def kubernetes_health_check():
+    return {"status": "healthy"}
+
 def generate_random_array(array_size: int, lower_bound: int, upper_bound: int) -> List[float]:
     """Generate random numbers using the array size and return them as list"""
     random_array = np.random.uniform(low = lower_bound, high = upper_bound, size = array_size).tolist()

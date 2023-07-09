@@ -26,6 +26,13 @@ main.ARRAY_UPPER_BOUND = 10
 def fake_request() -> Request:
     return Request(scope = {"type": "http"})
 
+def test_kubernetes_health_check() -> None:
+    response = test_client.get("/")
+
+    assert response.status_code == 200
+    assert response.json().get("status") is not None
+    assert response.json()["status"] == "healthy"
+
 @pytest.mark.parametrize("data", ["", 1, None, [], ()])
 async def test_get_valid_json_returns_None_if_json_is_invalid(
     data: Any, fake_request: Request
