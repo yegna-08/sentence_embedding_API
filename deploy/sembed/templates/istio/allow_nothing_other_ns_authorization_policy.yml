@@ -1,0 +1,14 @@
+{{- if .Values.serviceMesh.istio.exists }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: allow-nothing-from-other-ns
+ namespace: {{.Release.Namespace}}
+spec:
+  action: ALLOW
+  rules:
+    - from:
+      - source:
+          #Deny the request if it is not from the below namespace
+          namespaces: ["{{.Release.Namespace}}"]
+{{- end}}

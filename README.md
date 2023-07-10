@@ -5,6 +5,7 @@ API that gets a sentence in english as input and returns embeddings as array of 
 - [Project Tree Structure](#project-tree-structure)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+  - [Istio](#istio)
   - [Nginx](#nginx)
     - [Host Names](#host-names)
   - [Install SEMBED API](#install-sembed-api)
@@ -59,6 +60,31 @@ API that gets a sentence in english as input and returns embeddings as array of 
 - An existing Kubernetes cluster
   - Version 1.18+ is recommended for Nginx ingress controller to work
 - [Helm](https://helm.sh/docs/intro/install/) version 3+
+
+### Istio
+First, check if [Istio](https://istio.io) is feasible to download:
+- Kubernetes version 1.20+ is recommended since they have Istio tokens by default
+    - Please follow this documentation to check If Istio can be installed in your cluster
+        - `https://istio.io/latest/docs/ops/best-practices/security/#configure-third-party-service-account-tokens`
+
+If Istio cannot be set up in your cluster, refer to the [Nginx](#nginx) section
+
+Install Istio:
+- `helm repo add istio https://istio-release.storage.googleapis.com/charts`
+- `kubectl create namespace istio-system`
+- `helm install istio-base istio/base -n istio-system --version 1.14`
+- `helm install istiod istio/istiod -n istio-system --set pilot.autoscaleEnabled=false --set values.global.jwtPolicy=first-party-jwt --version 1.14`
+- `kubectl create namespace istio-ingress`
+- `kubectl label namespace istio-ingress istio-injection=enabled`
+- `helm install gateway istio/gateway -n istio-ingress --set autoscaling.enabled=false --version 1.14`
+- `kubectl create namespace sembed`
+- `kubectl label namespace sembed istio-injection=enabled`
+
+Modify `application/values.yaml`:
+- Set serviceMesh.istio.exists to true
+- Uncomment sidecar.istio.io/inject under pod annotations in three places
+- Provide JWT(JSON web token) parameters
+- You can also set Jwt to false and ignore jwt parameters
 
 ## Nginx
 [Nginx](https://kubernetes.github.io/ingress-nginx/)

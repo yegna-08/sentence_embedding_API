@@ -1,0 +1,18 @@
+{{- if .Values.serviceMesh.istio.exists }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{.Release.Name}}-gateway
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    istio: gateway
+    app: gateway
+  servers:
+  - port:
+      number: 80
+      name: http-web
+      protocol: HTTP
+    hosts:
+    - "*"
+{{- end}}

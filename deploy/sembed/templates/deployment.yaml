@@ -13,10 +13,11 @@ spec:
       {{- include "sembed.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yml") . | sha256sum }}
+        {{- if .Values.serviceMesh.istio.exists }}
+        sidecar.istio.io/inject: "true"
+        {{- end }}
       labels:
         {{- include "sembed.selectorLabels" . | nindent 8 }}
     spec:

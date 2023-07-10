@@ -1,0 +1,14 @@
+{{- if and .Values.serviceMesh.istio.exists (not .Values.serviceMesh.istio.jwtAuth.enable) }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-sembed
+  namespace: {{.Release.Namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}
+  action: ALLOW
+  rules:
+    - {}
+{{- end}}

@@ -1,0 +1,14 @@
+{{- if and .Values.serviceMesh.istio.exists .Values.serviceMesh.istio.jwtAuth.enable }}
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-istio-sembed
+  namespace: {{.Release.Name}}
+spec:
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}
+  jwtRules:
+  - issuer: {{ .Values.serviceMesh.istio.jwtAuth.issuer }}
+    jwksUri: {{ .Values.serviceMesh.istio.jwtAuth.jwksUri }}
+{{- end}}

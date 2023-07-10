@@ -46,12 +46,17 @@ service:
   application_port: 5000
 
 ingress:
+  # This is to enable Nginx
   enabled: true
   className: nginx
   annotations:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
+    # Configure rate limiting to allow 125 requests/second per replica
+    # Formula is successful requests = (period * rate + burst) * (# of ginx replicas)
+    # in our case (period * 5 + 25) * 1
+    nginx.ingress.kubernetes.io/limit-rps: "5"
   hosts:
     # Sentence Embedding abbreviated as sembed
     - host: www.sembed.com
@@ -62,6 +67,22 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - www.sembed.com
+
+serviceMesh:
+  istio:
+    # Set this to true If istio is installed in the cluster
+    # Setting this to false will install Nginx ingress controller by default
+    exists: false
+    # Peer authentication - can take PERMISSIVE, STRICT or DISABLE (UNSET becomes PERMISSIVE as no parent)
+    peer_authentication: PERMISSIVE
+    jwtAuth:
+      #This is default true to enable JWT authorization for SEMBED API
+      enable: true
+      #Provide the values If jwt is enabled, the below values are defaults from istio docs
+      issuer: "testing@secure.istio.io"
+      jwksUri: "https://raw.githubusercontent.com/istio/istio/release-1.13/security/tools/jwt/samples/jwks.json"
+      requestPrincipals: ["testing@secure.istio.io/testing@secure.istio.io"]
+    host: www.sembed.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

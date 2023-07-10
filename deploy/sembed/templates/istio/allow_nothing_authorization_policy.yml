@@ -1,0 +1,10 @@
+{{- if .Values.serviceMesh.istio.exists }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: allow-nothing
+ namespace: {{.Release.Namespace}}
+spec:
+  action: ALLOW
+  # the rules field is not specified, and the policy will never match.
+{{- end}}
