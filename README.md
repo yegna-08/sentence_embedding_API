@@ -82,7 +82,6 @@ Install Istio:
 
 Modify `application/values.yaml`:
 - Set serviceMesh.istio.exists to true
-- Uncomment sidecar.istio.io/inject under pod annotations in three places
 - Provide JWT(JSON web token) parameters
 - You can also set Jwt to false and ignore jwt parameters
 
